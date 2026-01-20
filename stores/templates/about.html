@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AdVitum HealthCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* --- YOUR ORIGINAL CSS (UNTOUCHED) --- */
+        :root {
+            --primary-color: #00A79D;
+            --primary-dark: #00877C;
+            --accent-color: #4BC0C0;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --background-light: linear-gradient(40deg, #ffffff, #f7f2f2);
+            --background-body: white;
+            --shadow-light: rgba(0, 0, 0, 0.04);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --gradient-subtle: linear-gradient(30deg, #ffffff, #eeebeb);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--background-body); 
+            color: var(--text-dark); 
+            min-height: 100vh; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; transition: 0.3s ease; }
+        ul { list-style: none; }
+
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 85px; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: white; transition: 0.4s ease-in-out;
+            z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        nav.scrolled { background: var(--primary-color); height: 70px; border-radius: 0; }
+         .logo-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .main-logo-image { height: 80px; width: auto; transition: 0.4s; margin-left: -25px; }
+        .logo { font-weight: 800; font-size: 1.3em; color: var(--primary-color); font-style: italic; }
+        .healthcare { color: #333; font-size: .65rem; font-weight: 700; margin-top: -5px; }
+        
+        nav.scrolled .logo, nav.scrolled .healthcare { color: rgb(58, 58, 58); }
+        nav.scrolled .main-logo-image { height: 60px; filter: brightness(0) invert(1); }
+
+        .nav-links-main { display: flex; gap: 30px; }
+        .nav-links-main li a { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); position: relative; padding-bottom: 5px; }
+        .nav-links-main li a::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 3px;
+            background: var(--primary-color); transition: 0.3s;
+        }
+        .nav-links-main li a:hover::after, .nav-links-main li a.active-link::after { width: 100%; }
+        nav.scrolled .nav-links-main li a { color: white; }
+        nav.scrolled .nav-links-main li a::after { background: white; }
+
+        .menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 10001; }
+        .menu-toggle .bar { width: 100%; height: 3px; background-color: var(--primary-color); border-radius: 10px; transition: 0.3s ease; }
+        nav.scrolled .menu-toggle .bar { background-color: white; }
+        .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links-main {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 100%;
+                background: white; flex-direction: column; align-items: center; justify-content: center;
+                gap: 40px; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); z-index: 10000;
+            }
+            .nav-links-main.active { right: 0; }
+        }
+        @media(max-width:900px) { /* Changed from 768px to 900px to match Products page */
+    .menu-toggle { display: flex; }
+    .nav-links-main {
+        position: absolute; /* Changed from fixed */
+        top: 100%; 
+        left: 0; 
+        width: 100%; 
+        background: white;
+        flex-direction: column; 
+        align-items: center; 
+        padding: 20px 0;
+        display: none; /* Changed from right: -100% */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        height: auto; /* Removed 100vh */
+    }
+    .nav-links-main.active { 
+        display: flex; 
+    }
+    nav.scrolled .nav-links-main { 
+        background: var(--primary-color); 
+    }
+}
+
+        /* --- ABOUT & SOCIAL MEDIA UI --- */
+        .content-section { padding: 160px 0 80px; }
+        
+        .social-card {
+            background: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 24px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            border-color: var(--primary-color);
+        }
+
+        .social-icon-box {
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+        }
+         /* --- FOOTER --- */
+        footer { background: #272e3d; color: #ecf0f1; padding: 80px 5% 40px;border-top-left-radius: 30px;border-top-right-radius: 30px; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); font-style: italic; margin-bottom: 20px; }
+        .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
+
+        
+        
+    </style>
+</head>
+
+<body>
+
+{% load static %}
+<nav id="navbar">
+    <div class="logo-section" onclick="location.href='/'">
+        <img src="{% static 'new_logo.png' %}" alt="Logo" class="main-logo-image">
+        
+    </div>
+
+    <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <ul class="nav-links-main" id="nav-list">
+        <li><a href="{% url 'home' %}" >Home</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'about' %}" class="active-link">About</a></li>
+        <li><a href="{% url 'contact' %}" >Contact</a></li>
+    </ul>
+</nav>
+
+<main class="content-section">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
+            <div>
+                <span class="text-[#00A79D] font-black uppercase tracking-widest text-sm">Integrity in Healthcare</span>
+                <h1 class="text-5xl md:text-6xl font-black text-gray-900 mt-4 mb-8 leading-tight">
+                    Reliable Medical <span class="text-[#00A79D]">Wholesale Solutions</span>
+                </h1>
+                <p class="text-lg text-gray-500 leading-relaxed mb-6">
+                    AdVitum Pharmaceutical Company LTD is built on the foundation of medical trust. We provide hospitals and clinics with high-quality pharmaceutical instruments that meet stringent international safety standards.
+                </p>
+                <div class="flex gap-4 items-center">
+                    <div class="w-12 h-12 bg-[#00A79D]/10 rounded-full flex items-center justify-center text-[#00A79D]">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <span class="font-bold text-gray-800">ISO 9001:2015 Quality Certified</span>
+                </div>
+            </div>
+            <div class="rounded-[40px] overflow-hidden shadow-2xl bg-teal-50 h-[400px] flex items-center justify-center">
+                 <i class="fas fa-shipping-fast text-9xl text-[#00A79D] opacity-20"></i>
+            </div>
+        </div>
+
+        <div class="mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black">Join Our Community</h2>
+                <p class="text-gray-500 mt-2">Stay updated with our latest products and healthcare news.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="https://www.linkedin.com/company/advitum-healthcare/" class="social-card">
+                    <div class="social-icon-box bg-[#0077B5]"><i class="fab fa-linkedin-in"></i></div>
+                    <div>
+                        <h4 class="font-bold">LinkedIn</h4>
+                        <p class="text-xs text-gray-400">Corporate Updates</p>
+                    </div>
+                </a>
+                <a href="#" class="social-card">
+                    <div class="social-icon-box bg-[#E4405F]"><i class="fab fa-instagram"></i></div>
+                    <div>
+                        <h4 class="font-bold">Instagram</h4>
+                        <p class="text-xs text-gray-400">Product Showcase</p>
+                    </div>
+                </a>
+                <a href="https://x.com/AdVitumHC" class="social-card">
+                    <div class="social-icon-box bg-[#000000]"><i class="fab fa-x-twitter"></i></div>
+                    <div>
+                        <h4 class="font-bold">Twitter</h4>
+                        <p class="text-xs text-gray-400">Latest News</p>
+                    </div>
+                </a>
+                <a href="https://www.facebook.com/share/1QCwCrvfFL" class="social-card">
+                    <div class="social-icon-box bg-[#1877F2]"><i class="fab fa-facebook-f"></i></div>
+                    <div>
+                        <h4 class="font-bold">Facebook</h4>
+                        <p class="text-xs text-gray-400">Community Hub</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center p-12 bg-gray-50 rounded-[50px]">
+            <div>
+                <h2 class="text-4xl font-black mb-6">Visit Our Distribution Hub</h2>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    Based in the heart of the medical district, our facility is open for professional inspections and bulk procurement consultations.
+                </p>
+            <div class="space-y-4 mb-8">
+    <div class="flex items-center gap-4">
+        <i class="fas fa-map-marker-alt text-[#00A79D]"></i>
+        <span class="font-bold">Siddhi Vinayak Business Park, Makarba, S.G. Road, Ahmedabad, Gujarat 380051</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <i class="fas fa-envelope text-[#00A79D]"></i>
+        <span class="font-bold">info@advitumhealthcare.com</span>
+    </div>
+</div>
+
+<a href="https://www.google.com/maps/dir/?api=1&destination=Siddhi+Vinayak+Business+Park+Ahmedabad" 
+   target="_blank" 
+   class="inline-block bg-[#00A79D] text-white px-8 py-4 rounded-xl font-bold hover:shadow-lg transition-all">
+   Get Directions
+</a>
+
+</div>
+            <div class="rounded-[40px] overflow-hidden shadow-xl h-[400px]">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.252808218!2d-74.11976373946229!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" 
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="main-container footer-content">
+        <div class="max-w-sm">
+            <div class="footer-logo">AdVitum Company.LTD</div>
+            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
+         
+        </div>
+        <div class="footer-links">
+            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
+            <ul class="space-y-2">
+                <li><a href="{%url 'about'%}">About Us</a></li>
+                <li><a href="{%url 'contact'%}">Contact</a></li>
+                <p>Help +91 9898265440</p>
+            </ul>
+        </div>
+    </div>
+   
+</footer>
+
+<script>
+    // Original Navbar Logic
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    // Original Mobile Menu Logic
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+
+    mobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.toggle('is-active');
+        navList.classList.toggle('active');
+    });
+
+
+
+
+
+    
+</script>
+
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title>AdVitum HealthCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary-color: #00A79D;
+            --primary-dark: #00877C;
+            --accent-color: #4BC0C0;
+            --text-dark: #2c3e50;
+            --background-body: #f8fafb;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+        body { font-family: 'Inter', sans-serif; background: var(--background-body); color: var(--text-dark); overflow-x: hidden; }
+
+        /* --- NAVBAR LOGIC (UNCHANGED) --- */
+       nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 85px; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: white; transition: 0.4s ease-in-out;
+            z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        nav.scrolled { background: var(--primary-color); height: 70px; border-radius: 0; }
+           .logo-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .main-logo-image { height: 80px; width: auto; transition: 0.4s; margin-left: -25px; }
+        .logo { font-weight: 800; font-size: 1.3em; color: var(--primary-color); font-style: italic; }
+        .healthcare { color: #333; font-size: .65rem; font-weight: 700; margin-top: -5px; }
+        nav.scrolled .logo, nav.scrolled .healthcare { color: rgb(58, 58, 58); }
+        nav.scrolled .main-logo-image { height: 60px; filter: brightness(0) invert(1); }
+
+        .nav-links-main { display: flex; gap: 30px; }
+        .nav-links-main li a { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); position: relative; padding-bottom: 5px; }
+        .nav-links-main li a::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 3px;
+            background: var(--primary-color); transition: 0.3s;
+        }
+        .nav-links-main li a:hover::after, .nav-links-main li a.active-link::after { width: 100%; }
+        nav.scrolled .nav-links-main li a { color: white; }
+        nav.scrolled .nav-links-main li a::after { background: white; }
+
+        .menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 10001; }
+        .menu-toggle .bar { width: 100%; height: 3px; background-color: var(--primary-color); border-radius: 10px; transition: 0.3s ease; }
+        nav.scrolled .menu-toggle .bar { background-color: white; }
+        .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        @media(max-width:900px) {
+            .menu-toggle { display: flex; }
+            .nav-links-main {
+                position: absolute; top: 100%; left: 0; width: 100%; background: white;
+                flex-direction: column; align-items: center; padding: 20px 0;
+                display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            }
+            .nav-links-main.active { display: flex; }
+            nav.scrolled .nav-links-main { background: var(--primary-color); }
+        }
+
+        /* --- SEARCH SECTION --- */
+        .search-container-main { position: relative; max-width:800px; margin:120px auto 20px; padding:0 15px; }
+        .search-input-hero { 
+            width:100%; padding:16px 55px 16px 25px; border-radius:40px; border:none; 
+            box-shadow:0 10px 25px rgba(0,0,0,0.05); outline: none; background: white; font-size: 0.95rem;
+        }
+        .search-clear-btn { position: absolute; right: 65px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; display: none; }
+
+        .sticky-search-wrapper {
+            position: fixed; top: 70px; left: 0; width: 100%; z-index: 9999;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            padding: 10px; transform: translateY(-110%); transition: 0.4s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .sticky-search-wrapper.visible { transform: translateY(0); }
+
+        /* --- MODERNIZED CATEGORY FILTER (FIXED PADDING/MARGIN) --- */
+        .filter-wrapper {
+            max-width: 1200px; margin: 0 auto 30px; padding: 0 20px;
+        }
+        .category-scroll {
+            display: flex; gap: 10px; overflow-x: auto; padding: 10px 5px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .category-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        .cat-pill {
+            padding: 10px 22px; background: white; border-radius: 50px;
+            white-space: nowrap; font-size: 0.85rem; font-weight: 600;
+            color: #5e6d77; border: 1px solid #e2e8f0; transition: 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: inline-block;
+        }
+        .cat-pill:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        .cat-pill.active { background: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 5px 15px rgba(0, 167, 157, 0.25); }
+
+        /* --- PRODUCT GRID --- */
+        .main-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; padding: 0 20px; max-width: 1200px; margin: 0 auto 50px;
+        }
+        .card { 
+            background: white; border-radius: 16px; overflow: hidden; 
+            border: 1px solid #f0f3f5; transition: 0.3s ease; display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px rgba(0,0,0,0.06); }
+        .card img { width: 100%; height: 220px; object-fit: contain; padding: 20px; background: #fff; }
+        .card-body { padding: 18px; flex-grow: 1; border-top: 1px solid #f8fafc; }
+        .card-body h3 { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+        .card-body p { font-size: 0.8rem; color: #64748b; line-height: 1.5; }
+
+        @media(max-width: 600px) {
+            .main-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px; }
+            .card img { height: 140px; padding: 12px; }
+            .card-body { padding: 12px; }
+            .card-body h3 { font-size: 0.85rem; }
+            .card-body p { display: none; }
+            .search-container-main { margin-top: 100px; }
+            .filter-wrapper { padding: 0 10px; margin-bottom: 15px; }
+        }
+
+        /* --- FOOTER CONTENT --- */
+        .footer-lite { background: #1e293b; color: #94a3b8; padding: 40px 20px; text-align: center; }
+        .footer-lite h4 { color: white; margin-bottom: 10px; font-weight: 700; }
+
+        
+        /* --- FOOTER --- */
+        footer { background: #272e3d; color: #ecf0f1; padding: 80px 5% 40px;border-top-left-radius: 30px;border-top-right-radius: 30px; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); font-style: italic; margin-bottom: 20px; }
+        .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
+
+    </style>
+</head>
+<body>
+
+{% load static %}
+<nav id="navbar">
+    <div class="logo-section" onclick="location.href='/'">
+        <img src="{% static 'new_logo.png' %}" alt="Logo" class="main-logo-image">
+        
+    </div>
+
+    <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <ul class="nav-links-main" id="nav-list">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'products' %}" class="active-link">Products</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="search-container-main">
+    <input type="search" id="heroSearchInput" placeholder="Search medical catalog..." class="search-input-hero" />
+    <i class="fa-solid fa-circle-xmark search-clear-btn" id="heroClear"></i>
+    <div class="absolute right-8 top-1/2 -translate-y-1/2 text-teal-500"><i class="fa-solid fa-magnifying-glass"></i></div>
+</div>
+
+<div class="sticky-search-wrapper" id="stickySearchWrapper">
+    <div class="max-w-xl mx-auto px-4 relative">
+        <input type="search" id="stickySearchInput" placeholder="Quick find..." class="w-full py-2 px-6 rounded-full border border-teal-200 outline-none bg-white">
+        <i class="fa-solid fa-circle-xmark absolute right-10 top-1/2 -translate-y-1/2 cursor-pointer text-gray-300" id="stickyClear"></i>
+    </div>
+</div>
+
+<div class="filter-wrapper">
+    <div class="category-scroll">
+        <a href="?" class="cat-pill {% if not request.GET.category %}active{% endif %}">
+            <i class="fa-solid fa-layer-group mr-1"></i> All Products
+        </a>
+        {% for i in category %}
+        <a href="?category={{ i.id }}" class="cat-pill {% if request.GET.category == i.id|stringformat:'s' %}active{% endif %}">
+            {{ i.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<main class="main-grid" id="itemsContainer">
+    {% for item in items %}
+    <div class="card">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+        <div class="card-body">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description|truncatechars:70 }}</p>
+            <div class="mt-4 flex justify-between items-center">
+                <span class="text-[9px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-bold uppercase tracking-wider">In Stock</span>
+                <button class="text-teal-500 hover:text-teal-700 transition"><i class="fa-solid fa-circle-plus text-xl"></i></button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-20 text-gray-400">
+        <i class="fa-solid fa-box-open text-5xl mb-4"></i>
+        <p>No products found in this category.</p>
+    </div>
+    {% endfor %}
+</main>
+
+<section class="bg-white py-16 px-6 border-t border-b">
+    <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-10 text-center">
+        <div>
+            <div class="w-16 h-16 bg-teal-50 text-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <h4 class="font-bold text-slate-800">Expert Support</h4>
+            <p class="text-sm text-slate-500 mt-2">Consultation available for all medical equipment setups.</p>
+        </div>
+        <div>
+            <div class="w-16 h-16 bg-teal-50 text-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-microscope"></i>
+            </div>
+            <h4 class="font-bold text-slate-800">Quality Tested</h4>
+            <p class="text-sm text-slate-500 mt-2">All supplies meet international pharmaceutical standards.</p>
+        </div>
+        <div>
+            <div class="w-16 h-16 bg-teal-50 text-teal-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+            </div>
+            <h4 class="font-bold text-slate-800">Bulk Orders</h4>
+            <p class="text-sm text-slate-500 mt-2">Special pricing available for hospitals and clinics.</p>
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="main-container footer-content">
+        <div class="max-w-sm">
+            <div class="footer-logo">AdVitum Company.LTD</div>
+            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
+         
+        </div>
+        <div class="footer-links">
+            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
+            <ul class="space-y-2">
+                <li><a href="{%url 'about'%}">About Us</a></li>
+                <li><a href="{%url 'contact'%}">Contact</a></li>
+                <p>Help +91 9898265440</p>
+            </ul>
+        </div>
+    </div>
+   
+</footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navbar = document.getElementById('navbar');
+    const menuBtn = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+    const heroInput = document.getElementById('heroSearchInput');
+    const stickyInput = document.getElementById('stickySearchInput');
+    const stickyWrapper = document.getElementById('stickySearchWrapper');
+    const heroClear = document.getElementById('heroClear');
+    const stickyClear = document.getElementById('stickyClear');
+    const cards = document.getElementsByClassName('card');
+
+    // SCROLL LOGIC
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+
+        if (window.scrollY > 500) stickyWrapper.classList.add('visible');
+        else stickyWrapper.classList.remove('visible');
+    });
+
+    // 3-LINE MENU LOGIC
+    menuBtn.addEventListener('click', () => {
+        navList.classList.toggle('active');
+        menuBtn.classList.toggle('is-active');
+    });
+
+    // SEARCH LOGIC
+    function performSearch(val) {
+        const query = val.toLowerCase().trim();
+        heroClear.style.display = query.length > 0 ? 'block' : 'none';
+        stickyClear.style.display = query.length > 0 ? 'block' : 'none';
+
+        Array.from(cards).forEach(card => {
+            const txt = card.innerText.toLowerCase();
+            card.style.display = txt.includes(query) ? 'flex' : 'none';
+        });
+    }
+
+    heroInput.addEventListener('input', (e) => {
+        stickyInput.value = e.target.value;
+        performSearch(e.target.value);
+    });
+
+    stickyInput.addEventListener('input', (e) => {
+        heroInput.value = e.target.value;
+        performSearch(e.target.value);
+    });
+
+    [heroClear, stickyClear].forEach(btn => {
+        btn.onclick = () => {
+            heroInput.value = '';
+            stickyInput.value = '';
+            performSearch('');
+        };
+    });
+});
+</script>
+
+</body>
+</html>

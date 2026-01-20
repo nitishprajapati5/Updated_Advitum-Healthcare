@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AdVitum HealthCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+   
+    <style>
+        /* --- KEEPING YOUR ORIGINAL CSS EXACTLY --- */
+        :root {
+            --primary-color: #00A79D;
+            --primary-dark: #00877C;
+            --accent-color: #4BC0C0;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --background-light: linear-gradient(40deg, #ffffff, #f7f2f2);
+            --background-body: white;
+            --shadow-light: rgba(0, 0, 0, 0.04);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --gradient-subtle: linear-gradient(30deg, #ffffff, #eeebeb);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--background-body); 
+            color: var(--text-dark); 
+            min-height: 100vh; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; transition: 0.3s ease; }
+        ul { list-style: none; }
+
+         nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 85px; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: white; transition: 0.4s ease-in-out;
+            z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        nav.scrolled { background: var(--primary-color); height: 70px; border-radius: 0; }
+        .logo-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .main-logo-image { height: 80px; width: auto; transition: 0.4s; margin-left: -25px; }
+        .logo { font-weight: 800; font-size: 1.3em; color: var(--primary-color); font-style: italic; }
+        .healthcare { color: #333; font-size: .65rem; font-weight: 700; margin-top: -5px; }
+        nav.scrolled .logo, nav.scrolled .healthcare { color: rgb(58, 58, 58); }
+        nav.scrolled .main-logo-image { height: 60px; filter: brightness(0) invert(1); }
+
+        .nav-links-main { display: flex; gap: 30px; }
+        .nav-links-main li a { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); position: relative; padding-bottom: 5px; }
+        .nav-links-main li a::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 3px;
+            background: var(--primary-color); transition: 0.3s;
+        }
+        .nav-links-main li a:hover::after, .nav-links-main li a.active-link::after { width: 100%; }
+        nav.scrolled .nav-links-main li a { color: white; }
+        nav.scrolled .nav-links-main li a::after { background: white; }
+
+        .menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 10001; }
+        .menu-toggle .bar { width: 100%; height: 3px; background-color: var(--primary-color); border-radius: 10px; transition: 0.3s ease; }
+        nav.scrolled .menu-toggle .bar { background-color: white; }
+        .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links-main {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 100%;
+                background: white; flex-direction: column; align-items: center; justify-content: center;
+                gap: 40px; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); z-index: 10000;
+            }
+            .nav-links-main.active { right: 0; }
+        }
+
+        /* --- CONTACT PAGE SPECIFIC UI --- */
+        .contact-wrapper { padding-top: 150px; padding-bottom: 80px; }
+        .form-input { 
+            width: 100%; padding: 16px 20px; background: #f9fbfc; 
+            border: 1px solid #eef2f4; border-radius: 16px; outline: none; transition: 0.3s;
+        }
+        .form-input:focus { border-color: var(--primary-color); background: white; box-shadow: 0 0 0 4px rgba(0, 167, 157, 0.05); }
+        
+        .contact-info-card {
+            background: var(--primary-color); color: white; border-radius: 40px; padding: 50px;
+            box-shadow: 0 30px 60px rgba(0, 167, 157, 0.2);
+        }
+
+        .social-circle {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s; color: white;
+        }
+        .social-circle:hover { background: white; color: var(--primary-color); transform: translateY(-3px); }
+
+        .faq-card {
+            border: 1px solid #eee; border-radius: 20px; padding: 25px; transition: 0.3s;
+        }
+        .faq-card:hover { border-color: var(--primary-color); background: #fdfdfd; }
+        
+
+@media(max-width:900px) { /* Changed from 768px to 900px to match Products page */
+    .menu-toggle { display: flex; }
+    .nav-links-main {
+        position: absolute; /* Changed from fixed */
+        top: 100%; 
+        left: 0; 
+        width: 100%; 
+        background: white;
+        flex-direction: column; 
+        align-items: center; 
+        padding: 20px 0;
+        display: none; /* Changed from right: -100% */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        height: auto; /* Removed 100vh */
+    }
+    .nav-links-main.active { 
+        display: flex; 
+    }
+    nav.scrolled .nav-links-main { 
+        background: var(--primary-color); 
+    }
+}
+
+
+        /* --- FOOTER --- */
+        footer { background: #272e3d; color: #ecf0f1; padding: 80px 5% 40px;border-top-left-radius: 30px;border-top-right-radius: 30px; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); font-style: italic; margin-bottom: 20px; }
+        .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
+
+    </style>
+</head>
+
+<body>
+
+{% load static %}
+<nav id="navbar">
+    <div class="logo-section">
+        <img src="{% static 'new_logo.png' %}" alt="Logo" class="main-logo-image">
+        
+    </div>
+
+    <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <ul class="nav-links-main" id="nav-list">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'contact' %}" class="active-link">Contact</a></li>
+    </ul>
+</nav>
+
+<main class="contact-wrapper">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-24">
+            
+            <div class="lg:col-span-7 bg-white p-8 md:p-12 rounded-[40px] border border-gray-100 shadow-sm">
+                <h2 class="text-4xl font-black mb-2">Send a Message</h2>
+                <p class="text-gray-400 mb-10">Inquire about bulk orders, product specs, or partnerships.</p>
+                
+               <form id="whatsapp-form" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label class="block text-sm font-bold mb-2 ml-1">Full Name</label>
+            <input type="text" id="wa_name" class="form-input" placeholder="John Doe" required>
+        </div>
+        <div>
+            <label class="block text-sm font-bold mb-2 ml-1">Country , city</label>
+            <input type="text" id="wa_facility" class="form-input" placeholder="India, ahmedabad">
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label class="block text-sm font-bold mb-2 ml-1">Email Address</label>
+            <input type="email" id="wa_email" class="form-input" placeholder="john@example.com">
+        </div>
+        <div>
+            <label class="block text-sm font-bold mb-2 ml-1">Phone Number</label>
+            <input type="tel" id="wa_phone" class="form-input" placeholder="+91 000-000-0000">
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-sm font-bold mb-2 ml-1">Message</label>
+        <textarea id="wa_message" rows="5" class="form-input" placeholder="Text your message to Advitum Team" required></textarea>
+    </div>
+
+    <button type="button" onclick="sendToWhatsApp()" class="w-full bg-[#25D366] text-white font-bold py-5 rounded-2xl hover:bg-[#128C7E] transition-all shadow-lg flex items-center justify-center gap-3">
+        <i class="fab fa-whatsapp text-2xl"></i>
+        Send to Advitum 
+    </button>
+</form>
+
+
+            </div>
+
+            <div class="lg:col-span-5 contact-info-card">
+                <h3 class="text-2xl font-bold mb-8">Contact Information</h3>
+                
+                <div class="space-y-8 mb-12">
+                    <div class="flex items-start gap-5">
+                        <div class="mt-1"><i class="fas fa-map-marker-alt text-xl opacity-70"></i></div>
+                        <div>
+                            <p class="text-sm opacity-60 uppercase font-bold tracking-widest mb-1">Our Warehouse</p>
+                            <p class="text-lg font-medium">Siddhi Vinayak Business Park, Makarba, S.G. Road, Ahmedabad - 380051</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-5">
+                        <div class="mt-1"><i class="fas fa-phone-alt text-xl opacity-70"></i></div>
+                        <div>
+                            <p class="text-sm opacity-60 uppercase font-bold tracking-widest mb-1">Wholesale Support</p>
+                            <p class="text-lg font-medium">+91 9898265440</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-5">
+                        <div class="mt-1"><i class="fas fa-envelope text-xl opacity-70"></i></div>
+                        <div>
+                            <p class="text-sm opacity-60 uppercase font-bold tracking-widest mb-1">Email Us</p>
+                            <p class="text-lg font-medium">info@advitumhealthcare.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-white/10">
+                    <p class="text-sm opacity-60 uppercase font-bold tracking-widest mb-6">Follow Our Socials</p>
+                    <div class="flex gap-4">
+                        <a href="https://wa.me/9898265440" class="social-circle"><i class="fab fa-whatsapp"></i></a>
+
+                        <a href="https://www.linkedin.com/company/advitum-healthcare/" class="social-circle"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-circle"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1QCwCrvfFL" class="social-circle"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/AdVitumHC" class="social-circle"><i class="fab fa-x-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-20">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black mb-4">Partnering with AdVitum</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">We streamline the medical procurement process for clinics and hospitals worldwide. Here is what you can expect.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="faq-card">
+                    <div class="w-12 h-12 bg-[#00A79D]/10 rounded-xl flex items-center justify-center text-[#00A79D] mb-6">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Response Time</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Our wholesale desk typically responds to instrument inquiries within 12-24 business hours with detailed quotes.</p>
+                </div>
+
+                <div class="faq-card">
+                    <div class="w-12 h-12 bg-[#00A79D]/10 rounded-xl flex items-center justify-center text-[#00A79D] mb-6">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Bulk Procurement</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">We offer tiered pricing for bulk orders. Please specify your volume requirements in the message field above.</p>
+                </div>
+
+                <div class="faq-card">
+                    <div class="w-12 h-12 bg-[#00A79D]/10 rounded-xl flex items-center justify-center text-[#00A79D] mb-6">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3">Warranty Support</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">All medical instruments come with a standard 12-month manufacturing warranty and technical setup support.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer>
+    <div class="main-container footer-content">
+        <div class="max-w-sm">
+            <div class="footer-logo">AdVitum Company.LTD</div>
+            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
+         
+        </div>
+        <div class="footer-links">
+            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
+            <ul class="space-y-2">
+                <li><a href="{%url 'about'%}">About Us</a></li>
+                <li><a href="{%url 'contact'%}">Contact</a></li>
+                <p>Help +91 9898265440</p>
+            </ul>
+        </div>
+    </div>
+   
+</footer>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+
+    mobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.toggle('is-active');
+        navList.classList.toggle('active');
+    });
+
+
+
+
+
+    function sendToWhatsApp() {
+    // 1. Enter your phone number here (with country code, no + or spaces)
+    const phoneNumber = "9898265440";
+
+    // 2. Get values from the form
+    const name = document.getElementById('wa_name').value;
+    const facility = document.getElementById('wa_facility').value;
+    const email = document.getElementById('wa_email').value;
+    const phone = document.getElementById('wa_phone').value;
+    const message = document.getElementById('wa_message').value;
+
+    // 3. Validation
+    if (name === "" || message === "") {
+        alert("Please fill in your name and message.");
+        return;
+    }
+
+    // 4. Create the message template
+    const finalMessage = `*New Inquiry for AdVitum*%0A%0A` +
+        `*Name:* ${name}%0A` +
+        `*Facility:* ${facility}%0A` +
+        `*Email:* ${email}%0A` +
+        `*Phone:* ${phone}%0A%0A` +
+        `*Message:* ${message}`;
+
+    // 5. Open WhatsApp
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${finalMessage}`;
+    window.open(whatsappUrl, '_blank').focus();
+}
+</script>
+
+</body>
+</html>

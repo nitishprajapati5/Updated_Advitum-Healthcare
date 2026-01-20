@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AdVitum HealthCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <style>
+        /* --- ORIGINAL COLOR PALETTE --- */
+        :root {
+            --primary-color: #00A79D;
+            --primary-dark: #00877C;
+            --accent-color: #4BC0C0;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --background-light: linear-gradient(40deg, #ffffff, #f7f2f2);
+            --background-body: white;
+            --shadow-light: rgba(0, 0, 0, 0.04);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --gradient-subtle: linear-gradient(30deg, #ffffff, #eeebeb);
+        }
+
+        /* RESET & BASE */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--background-body); 
+            color: var(--text-dark); 
+            min-height: 100vh; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; transition: 0.3s ease; }
+        ul { list-style: none; }
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- NAVBAR & RESPONSIVE TOGGLE --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 85px; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: white; transition: 0.4s ease-in-out;
+            z-index: 10000; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            
+        }
+
+        nav.scrolled { background: var(--primary-color); height: 70px; border-radius: 0; }
+        .logo-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .main-logo-image { height: 80px; width: auto; transition: 0.4s; margin-left: -25px; }
+        .logo { font-weight: 800; font-size: 1.3em; color: var(--primary-color); font-style: italic; }
+        .healthcare { color: #333; font-size: .65rem; font-weight: 700; margin-top: -5px; }
+        
+        nav.scrolled .logo, nav.scrolled .healthcare { color: rgb(58, 58, 58); }
+        nav.scrolled .main-logo-image { height: 60px; filter: brightness(0) invert(1); }
+
+        .nav-links-main { display: flex; gap: 30px; }
+        .nav-links-main li a { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); position: relative; padding-bottom: 5px; }
+        .nav-links-main li a::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 3px;
+            background: var(--primary-color); transition: 0.3s;
+        }
+        .nav-links-main li a:hover::after, .nav-links-main li a.active-link::after { width: 100%; }
+        nav.scrolled .nav-links-main li a { color: white; }
+        nav.scrolled .nav-links-main li a::after { background: white; }
+
+        /* 3-Line Menu Toggle */
+        .menu-toggle { display: none; flex-direction: column; justify-content: space-between; width: 30px; height: 21px; cursor: pointer; z-index: 10001; }
+        .menu-toggle .bar { width: 100%; height: 3px; background-color: var(--primary-color); border-radius: 10px; transition: 0.3s ease; }
+        nav.scrolled .menu-toggle .bar { background-color: white; }
+        .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+        .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* --- LIGHT & MODERN SOCIAL BAR --- */
+.social-bar {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    /* Soft gradient: Light Mint to a bright Clean White */
+    background-color: white; 
+    
+    /* --- E-COMMERCE SLICE DESIGN CODE --- */
+    background-image:
+        /* 1. Main Diagonal Color Section */
+        linear-gradient(
+            -160deg,
+            white 45%, /* Starts as white */
+            rgb(213, 233, 233) 45.1%, /* Sharp transition to accent color */
+            var(--accent-color) 60%,
+            rgb(234, 241, 241)100% /* Blends to primary color at the far edge */
+        );
+
+    background-size: 100% 100%;
+    /* You can adjust background-position if you use a photo that needs to align 
+       with the color slice. */
+    background-position: center center;
+    
+    /* Add a subtle shadow for a 'floating' clean product feel */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); 
+    /* ----------------------------------- */
+
+
+    padding: 10px 5%; 
+    margin-top: 85px;
+    position: relative; 
+    overflow: hidden; 
+    box-shadow: 0 2px 15px rgba(0, 167, 157, 0.1);
+    border-bottom: 2px solid #f0fdfa;
+    border-radius: 10px;
+}
+
+/* Bright text and icons */
+.social-bar .owner { 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    margin-left: -15px;
+    color: rgb(44, 44, 44); /* Using your teal for the text so it's readable */
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 2;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.social-icons a { 
+    font-size: 1.1rem; 
+    color: var(--primary-color); 
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover { 
+    color: var(--text-dark);
+    transform: translateY(-2px);
+}
+
+/* Subtle Shimmer for Light Background */
+.social-bar::before {
+    content: ""; 
+    position: absolute; 
+    top: 0; 
+    left: -150%; 
+    width: 40%; 
+    height: 100%;
+    /* Bright white shimmer */
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    animation: shimmer 4s infinite linear;
+    z-index: 1;
+}
+
+/* Responsive tweak for the social bar */
+@media (max-width: 768px) {
+    .social-bar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        padding: 15px 5%;
+    }
+}
+        @keyframes shimmer { 0% { left: -150%; } 100% { left: 150%; } }
+        .owner { font-size: 0.75rem; font-weight: 700; color: #666; font-style: italic; }
+        .social-icons { display: flex; gap: 40px; }
+        .social-icons a { font-size: 1.1rem; color: #444; transition: 0.3s; }
+        .social-icons a:hover { transform: translateY(-3px) scale(1.2); color: var(--primary-color); }
+
+        /* --- HERO & CAROUSEL --- */
+       .hero-banner {
+    width: 100%; 
+    height: auto;
+    min-height: 700px;
+    max-height: 900px; 
+    display: flex; 
+    justify-content: center;
+    position: relative; 
+    padding: 0 5%; 
+    align-items: center;
+    gap: 40px;
+    overflow: hidden;
+    
+       /* Base: Clean White for optimal product visibility */
+    background-color: white; 
+    
+    /* --- E-COMMERCE SLICE DESIGN CODE --- */
+    background-image:
+        /* 1. Main Diagonal Color Section */
+        linear-gradient(
+            -45deg,
+            white 45%, /* Starts as white */
+            rgb(234, 241, 241) 45.1%, /* Sharp transition to accent color */
+            var(--accent-color) 90%,
+            rgb(234, 241, 241)100% /* Blends to primary color at the far edge */
+        );
+
+    background-size: 100% 100%;
+    /* You can adjust background-position if you use a photo that needs to align 
+       with the color slice. */
+    background-position: center center;
+    
+    /* Add a subtle shadow for a 'floating' clean product feel */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); 
+    /* ----------------------------------- */
+}
+
+    
+    
+
+        .hero-background {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 30%, transparent), 
+            url('https://images.unsplash.com/photo-1576091160399-112ba8d25d10?auto=format&fit=crop&w=1400&q=80');
+            background-size: cover; z-index: 0;
+        }
+        .hero-content { position: relative; z-index: 2; flex: 1; }
+        .hero-content h1 { font-size: 3.5rem; line-height: 1.1; color: var(--text-dark); margin-bottom: 20px; }
+        
+        .image-carousel {
+            flex: 1; position: relative; height: 300px; border-radius: 30px; 
+           
+            background: linear-gradient(90deg, #e0f2f1 0%, #ffffff 50%, #e0f2f1 100%); 
+            overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); z-index: 2;
+            transition: transform 0.5s ease;
+
+               /* Base: Clean White for optimal product visibility */
+    background-color: white; 
+    
+    /* --- E-COMMERCE SLICE DESIGN CODE --- */
+    background-image:
+        /* 1. Main Diagonal Color Section */
+        linear-gradient(
+            -150deg,
+            white 45%, /* Starts as white */
+            rgb(234, 241, 241) 45.1%, /* Sharp transition to accent color */
+            var(--accent-color) 40%,
+            rgb(234, 241, 241)90% /* Blends to primary color at the far edge */
+        );
+
+    background-size: 100% 100%;
+    /* You can adjust background-position if you use a photo that needs to align 
+       with the color slice. */
+    background-position: center center;
+   border-radius: 40px;
+    /* This combines the colored hard shadow and the subtle soft shadow */
+    box-shadow: 
+        20px 20px 0px var(--accent-color), 
+        0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .image-carousel:hover { transform: scale(1.10); height: 300px; }
+        .carousel-images img { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 1s; }
+        .carousel-images img.active-image { opacity: 1; }
+
+        .explore-btn {
+            display: inline-block; padding: 16px 40px; background: var(--primary-color);
+            color: white; border-radius: 50px; font-weight: 500; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 167, 157, 0.2);
+        }
+        .explore-btn:hover {
+            display: inline-block; padding: 16px 40px; background: var(--primary-dark);
+            color: rgb(219, 219, 219); border-radius: 50px; font-weight: 700; transition: 0.3s;
+          
+            box-shadow: 0 10px 20px rgba(0, 167, 157, 0.2);
+        }
+
+        /* --- SCROLL CARDS --- */
+        .scroll-container {
+            display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; padding: 20px 0;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .scroll-container::-webkit-scrollbar { display: none; }
+        .feature-card { min-width: 320px; flex-shrink: 0; transition: 0.4s; }
+        .feature-card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
+
+        /* --- BENEFITS (YOUR REDESIGN) --- */
+        .benefits-section { background: #f0fdfa; padding: 100px 0; text-align: center; border-radius: 30px; }
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 50px; }
+        .benefit-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0, 167, 157, 0.05); border: 1px solid #e2e8f0; text-align: left; transition: 0.3s; }
+        .benefit-card:hover { border-color: var(--primary-color); transform: translateY(-5px); }
+        .benefit-card i { background: var(--primary-color); color: white; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 15px; font-size: 1.5rem; margin-bottom: 20px; }
+
+        /* --- FOOTER --- */
+        footer { background: #272e3d; color: #ecf0f1; padding: 80px 5% 40px;border-top-left-radius: 30px;border-top-right-radius: 30px; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
+        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); font-style: italic; margin-bottom: 20px; }
+        .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
+
+        /* --- RESPONSIVE FIXES --- */
+        @media (max-width: 992px) {
+            .hero-banner { flex-direction: column; text-align: center; padding-top: 140px; }
+            .hero-content h1 { font-size: 2.8rem; }
+            .image-carousel { width: 100%; height: 350px; }
+            .about-detailed { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links-main {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 100%;
+                background: white; flex-direction: column; align-items: center; justify-content: center;
+                gap: 40px; transition: 0.5s cubic-bezier(0.77,0.2,0.05,1.0); z-index: 10000;
+            }
+            .nav-links-main.active { right: 0; }
+            .social-bar { flex-direction: column; gap: 15px; height: auto; padding: 20px; text-align: center; }
+        }
+
+
+
+/* ----------------------------------------------------------- */
+
+
+:root {
+    --card-w: 280px;      /* Standard size */
+    --card-scale: 1.2;    /* Middle growth */
+    --accent: #3b82f6;
+    --bg-soft: #f8fafb;
+}
+
+/* 1. Ensure the container centers the first card perfectly on all screens */
+.scroll-container {
+    display: flex;
+    gap: 40px;
+    overflow-x: auto;
+    /* This calculation is the 'Developer Secret' for perfect centering */
+    padding: 50px calc(50% - (var(--card-w) / 2));
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    align-items: center;
+    /* Edge fading mask */
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+.scroll-container::-webkit-scrollbar { display: none; }
+
+.feature-card {
+    min-width: var(--card-w);
+    flex: 0 0 var(--card-w);
+    aspect-ratio: 1 / 1;
+    scroll-snap-align: center;
+    perspective: 1000px;
+}
+
+/* 2. Professional Inner Card Design */
+.inner-square {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 42px; /* Super-ellipse squircle */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px;
+    border: 1px solid rgba(0,0,0,0.03);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    
+    /* Smooth Transition Setup */
+    transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    transform: scale(0.85); 
+    opacity: 0.4;
+    filter: blur(1px);
+}
+
+/* 3. The 'Middle' Focus State */
+.feature-card.is-active .inner-square {
+    transform: scale(var(--card-scale));
+    opacity: 1;
+    filter: blur(0px);
+    box-shadow: 0 40px 80px rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* 4. Icon & Typography refinement */
+.icon-blob {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    transition: 0.5s ease;
+}
+
+.feature-card.is-active .icon-blob {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+/* 5. Modern Nav Buttons */
+.nav-btn {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 58px;
+    height: 58px;
+    background: #ffffff;
+    color: #1a1a1a;
+    border-radius: 50%;
+    z-index: 100;
+    border: none;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-55%) scale(1.1);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    :root { --card-w: 240px; }
+    .nav-btn { width: 48px; height: 48px; }
+    .nav-btn.left { left: 10px; }
+    .nav-btn.right { right: 10px; }
+}
+
+/* Desktop spacing */
+@media (min-width: 769px) {
+    .nav-btn.left { left: -30px; }
+    .nav-btn.right { right: -30px; }
+}
+
+/* ----------------------------------below experience */
+
+/* Modern Card Styling */
+.stat-card {
+    background: white;
+    border-radius: 35px;
+    padding: 30px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+    transition: transform 0.4s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+}
+
+.stat-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* Pulse effect for a "live" feel */
+.pulse-animation {
+    animation: iconPulse 3s infinite;
+}
+
+@keyframes iconPulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.2); }
+    70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+/* Pure CSS Counter Logic */
+.stat-number-css {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+/* Animation for Years (Target: 15) */
+.count-years::after {
+    content: "0";
+    animation: counterYears 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Animation for Partners (Target: 2500) */
+/* Note: For high numbers, CSS usually shows a few steps to feel real */
+.count-partners::after {
+    content: "0";
+    animation: counterPartners 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes counterYears {
+    0% { content: "0"; }
+    20% { content: "4"; }
+    40% { content: "8"; }
+    60% { content: "11"; }
+    80% { content: "14"; }
+    100% { content: "15"; }
+}
+
+@keyframes counterPartners {
+    0% { content: "0"; }
+    20% { content: "450"; }
+    40% { content: "1100"; }
+    60% { content: "1850"; }
+    80% { content: "2300"; }
+    100% { content: "2500"; }
+}
+
+/* Ensure the numbers render correctly in all browsers */
+@supports (font-variant-numeric: tabular-nums) {
+    .stat-number-css {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+
+@media(max-width:900px) { /* Changed from 768px to 900px to match Products page */
+    .menu-toggle { display: flex; }
+    .nav-links-main {
+        position: absolute; /* Changed from fixed */
+        top: 100%; 
+        left: 0; 
+        width: 100%; 
+        background: white;
+        flex-direction: column; 
+        align-items: center; 
+        padding: 20px 0;
+        display: none; /* Changed from right: -100% */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        height: auto; /* Removed 100vh */
+    }
+    .nav-links-main.active { 
+        display: flex; 
+    }
+    nav.scrolled .nav-links-main { 
+        background: var(--primary-color); 
+    }
+}
+    </style>
+</head>
+
+<body>
+
+{% load static %}
+<nav id="navbar">
+    <div class="logo-section" onclick="location.href='/'">
+        <img src="{% static 'new_logo.png' %}" alt="Logo" class="main-logo-image">
+       
+    </div>
+
+    <div class="menu-toggle" id="mobile-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+
+    <ul class="nav-links-main" id="nav-list">
+        <li><a href="{% url 'home' %}" class="active-link">Home</a></li>
+        <li><a href="{% url 'products' %}">Products</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="social-bar">
+   <p class="owner">
+  <i class="fas fa-envelope"></i>  info@advitumhealthcare.com  || 
+  <i class="fas fa-phone"></i>  +91 9898265440
+</p>
+    <div class="social-icons">
+       <a href="https://www.linkedin.com/company/advitum-healthcare/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://wa.me/9898265440" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://www.facebook.com/share/1QCwCrvfFL" target="_blank"><i class="fab fa-facebook-f"></i></a>
+<a href="https://x.com/AdVitumHC" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+</div>
+
+<div class="hero-banner">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+        <h1>Empowering <br>Modern Healthcare</h1>
+        <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-light); margin-bottom: 35px; max-width: 600px;">
+        Providing a comprehensive range of reliable medical equipment and ISO-certified supplies 
+        specifically engineered for hospitals, clinics, and specialized care centers worldwide. 
+        We bridge the gap between global manufacturers and local healthcare providers, ensuring 
+        uncompromising quality, technical support, and rapid logistics in every delivery.
+    </p>  <a href="{% url 'products' %}" class="explore-btn">EXPLORE PRODUCTS</a>
+    </div>
+
+    <div class="image-carousel">
+        <div class="carousel-images">
+            <img src="{% static 'add2.png' %}" class="active-image">
+            <img src="{% static 'add1.png' %}">
+            <img src="{% static 'add3.png' %}">
+        </div>
+    </div>
+</div>
+
+<section id="about-us-section" class="main-container py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?fit=crop&w=800" alt="About" class="rounded-[40px] shadow-[20px_20px_0px_var(--accent-color)]">
+    </div>
+    <div class="about-text">
+        <h2 class="text-4xl font-bold mb-6">AdVitum Healthcare: <br><span class="font-light text-slate-500">Your Strategic Partner</span></h2>
+        <p class="mb-4">Founded in Ahmedabad, <strong>AdVitum Healthcare</strong> specializes in bridging the gap between global manufacturers and local healthcare providers.</p>
+        <ul class="space-y-3">
+            <li><i class="fas fa-certificate text-teal-500 mr-3"></i> Authentic Global Brands</li>
+            <li><i class="fas fa-truck-loading text-teal-500 mr-3"></i> Bulk Supply Capabilities</li>
+            <li><i class="fas fa-tools text-teal-500 mr-3"></i> Post-Sales Technical Support</li>
+        </ul>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <div class="main-container">
+        <h3 class="text-4xl font-extrabold mb-10">Premium Wholesale Benefits</h3>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fas fa-tags"></i>
+                <h4 class="font-bold text-xl mb-3">Wholesale Pricing</h4>
+                <p>Maximize your margins with direct manufacturer pricing tailored for hospitals.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-shipping-fast"></i>
+                <h4 class="font-bold text-xl mb-3">Swift Logistics</h4>
+                <p>Priority express shipping ensures your inventory never runs out.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-shield-alt"></i>
+                <h4 class="font-bold text-xl mb-3">Quality Assured</h4>
+                <p>Every shipment is ISO-certified and undergoes strict inspection.</p>
+            </div>
+        </div>
+    </div>
+
+<section class="py-24 bg-[#f8fafb]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <div class="lg:col-span-7">
+                <span class="inline-block py-1 px-4 rounded-full bg-blue-100 text-blue-700 text-sm font-bold uppercase tracking-wider mb-6">
+                    Our Impact
+                </span>
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
+                    Driving the Future of <br>
+                    <span class="text-[#00A79D]">Global Healthcare</span>
+
+                </h2>
+                <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
+                    AdVitum combines years of logistical expertise with a relentless focus on quality. We don't just ship products; we deliver reliability to clinics and hospitals that save lives every single day.
+                </p>
+                
+            </div>
+
+            <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                
+                <div class="stat-card">
+                    <div class="stat-inner">
+                        <div class="stat-icon bg-blue-50 text-blue-600 pulse-animation">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="flex items-baseline gap-1">
+                                <span class="stat-number-css count-years"></span>
+                                <span class="text-3xl font-bold text-blue-600">+</span>
+                            </div>
+                            <p class="text-gray-500 font-bold uppercase text-xs tracking-widest">Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-inner">
+                        <div class="stat-icon bg-orange-50 text-orange-500 pulse-animation">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="flex items-baseline gap-1">
+                                <span class="stat-number-css count-partners"></span>
+                                <span class="text-3xl font-bold text-orange-500">+</span>
+                            </div>
+                            <p class="text-gray-500 font-bold uppercase text-xs tracking-widest">Global Partners</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+   
+
+</section>
+
+<div class="py-20 bg-[#f8fafb] overflow-hidden">
+    
+    <header class="text-center mb-12">
+        <h2 class="text-5xl font-black text-[#00877C] tracking-tight">
+            AdVitum <span class="text-gray-700">Commitment</span>
+        </h2>
+    </header>
+
+    <div class="slider-container relative max-w-6xl mx-auto px-4">
+        <button id="prevBtn" class="nav-btn left"> <i class="fas fa-chevron-left"></i> </button>
+        <button id="nextBtn" class="nav-btn right"> <i class="fas fa-chevron-right"></i> </button>
+
+        <div id="card-container" class="scroll-container">
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-blue-50 text-blue-600"><i class="fas fa-globe-americas"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Global Reach</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">Delivering certified medical products worldwide.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-orange-50 text-orange-500"><i class="fas fa-certificate"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Quality</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">Highest standards for patient safety.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-indigo-50 text-indigo-600"><i class="fas fa-microscope"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Specialized</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">Focus on diagnostic & protective tools.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-green-50 text-green-600"><i class="fas fa-shield-alt"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Reliability</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">Consistent supply chains you can trust.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-purple-50 text-purple-600"><i class="fas fa-lightbulb"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Innovation</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">Adapting to modern medical needs.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="inner-square">
+                    <div class="icon-blob bg-red-50 text-red-600"><i class="fas fa-headset"></i></div>
+                    <h4 class="text-2xl font-bold text-gray-800">Support</h4>
+                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">24/7 expert medical assistance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="main-container footer-content">
+        <div class="max-w-sm">
+            <div class="footer-logo">AdVitum Company.LTD</div>
+            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
+         
+        </div>
+        <div class="footer-links">
+            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
+            <ul class="space-y-2">
+                <li><a href="{%url 'about'%}">About Us</a></li>
+                <li><a href="{%url 'contact'%}">Contact</a></li>
+                <p>Help +91 9898265440</p>
+            </ul>
+        </div>
+    </div>
+   
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuBtn = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        const navbar = document.getElementById('navbar');
+
+        // 1. MOBILE MENU TOGGLE
+        menuBtn.addEventListener('click', () => {
+            navList.classList.toggle('active');
+            menuBtn.classList.toggle('is-active');
+        });
+
+        // 2. SCROLL NAVBAR EFFECT
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // 3. CAROUSEL AUTO-LOOP
+        const images = document.querySelectorAll(".carousel-images img");
+        let currentIndex = 0;
+        function nextSlide() {
+            images[currentIndex].classList.remove("active-image");
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add("active-image");
+        }
+        setInterval(nextSlide, 3000);
+
+        // 4. COUNTER LOGIC (RE-ADDED)
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; 
+        const startCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText.replace('+', '');
+                    const inc = target / speed;
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc) + '+';
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target + '+';
+                    }
+                };
+                updateCount();
+            });
+        };
+        // Trigger counters when visible
+        const observer = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) startCounters();
+        });
+        if(counters.length > 0) observer.observe(counters[0]);
+    });
+
+
+
+    // -------------------------------------------------------------------------------------
+    const container = document.getElementById('card-container');
+    const cards = document.querySelectorAll('.feature-card');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    // Detect which card is centered to apply 'is-active' class
+    const observerOptions = {
+        root: container,
+        threshold: 0.6, 
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-active');
+            } else {
+                entry.target.classList.remove('is-active');
+            }
+        });
+    }, observerOptions);
+
+    cards.forEach(card => observer.observe(card));
+
+    // Smooth scroll amount based on card width
+    const scrollAmount = 320; 
+
+    nextBtn.addEventListener('click', () => {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+
+
+    
+
+</script>
+
+</body>
+</html>
