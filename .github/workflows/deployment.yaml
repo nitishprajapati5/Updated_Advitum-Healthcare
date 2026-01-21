@@ -13,44 +13,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to Hostinger VPS
-        env:
-          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
-          HOST: ${{ secrets.HOSTINGER_IP_ADDRESS }}
-          USER: ${{ secrets.HOSTINGER_USER }}
+      - name: Setup SSH
         run: |
-          # Setup SSH
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts 2>/dev/null
-          
-          # Deploy with -T flag to avoid PTY allocation warning
-          ssh -T -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $USER@$HOST << 'ENDSSH'
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh
+          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Hostinger VPS
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
             set -e
             
             echo "➡️ Moving to project directory"
             cd /var/www/Updated_Advitum-Healthcare
             
-            echo "➡️ Pulling latest code"
+            echo "➡️ Pulling latest code from main branch"
             git reset --hard
             git pull origin main
             
             echo "➡️ Activating virtual environment"
             source venv/bin/activate
             
-            echo "➡️ Installing dependencies"
+            echo "➡️ Installing/updating dependencies"
             pip install -r requirements.txt
             
-            echo "➡️ Running migrations"
+            echo "➡️ Running Django migrations"
             python manage.py migrate --noinput
             
             echo "➡️ Collecting static files"
             python manage.py collectstatic --noinput
             
-            echo "➡️ Restarting services"
+            echo "➡️ Restarting Gunicorn and reloading Nginx"
             sudo systemctl restart gunicorn
             sudo systemctl reload nginx
             
-            echo "✅ Deployment complete"
-          ENDSSH
+            echo "✅ Deployment finished successfully"
+          EOF
