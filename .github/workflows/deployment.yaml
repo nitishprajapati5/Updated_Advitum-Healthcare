@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup SSH
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -22,37 +20,33 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
 
-      # 3️⃣ Deploy Django app
       - name: Deploy to Hostinger VPS
         run: |
-          
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} 'bash -s' << 'ENDSSH'
-            set -e  # Exit immediately if a command Fails
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
+          set -e
 
-            echo "➡️ Moving to project directory"
-            cd /var/www/Updated_Advitum-Healthcare
+          echo "➡️ Moving to project directory"
+          cd /var/www/Updated_Advitum-Healthcare
 
-            echo "➡️ Pulling latest code from main branch"
-            git reset --hard  # Ensure local changes don’t block pull
-            git pull origin main
+          echo "➡️ Pulling latest code from main branch"
+          git reset --hard
+          git pull origin main
 
-            echo "➡️ Activating virtual environment"
-            source venv/bin/activate
+          echo "➡️ Activating virtual environment"
+          source venv/bin/activate
 
-            echo "➡️ Installing/updating dependencies"
-            pip install -r requirements.txt
+          echo "➡️ Installing/updating dependencies"
+          pip install -r requirements.txt
 
-            echo "➡️ Running Django migrations"
-            python manage.py migrate --noinput
+          echo "➡️ Running Django migrations"
+          python manage.py migrate --noinput
 
-            echo "➡️ Collecting static files"
-            python manage.py collectstatic --noinput
+          echo "➡️ Collecting static files"
+          python manage.py collectstatic --noinput
 
-            echo "➡️ Restarting Gunicorn and reloading Nginx"
-            # Use sudo only if necessary; root user doesn’t need sudo
-            systemctl restart gunicorn || echo "Failed to restart Gunicorn"
-            systemctl reload nginx || echo "Failed to reload Nginx"
+          echo "➡️ Restarting Gunicorn and reloading Nginx"
+          sudo systemctl restart gunicorn
+          sudo systemctl reload nginx
 
-            echo "✅ Deployment finished successfully"
-            ENDSSH
-
+          echo "✅ Deployment finished successfully"
+          ENDSSH
