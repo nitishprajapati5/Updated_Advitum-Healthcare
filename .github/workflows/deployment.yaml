@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy to Hostinger VPS
         run: |
-          ssh ${{secrets.HOSTINGER_USER}}@${{secrets.HOSTINGER_IP_ADDRESS}} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{secrets.HOSTINGER_USER}}@${{secrets.HOSTINGER_IP_ADDRESS}} << 'EOF'
 
           
     
