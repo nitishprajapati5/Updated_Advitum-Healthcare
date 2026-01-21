@@ -13,17 +13,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          chmod 700 ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
-
       - name: Deploy to Hostinger VPS
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          HOST: ${{ secrets.HOSTINGER_IP_ADDRESS }}
+          USER: ${{ secrets.HOSTINGER_USER }}
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
-
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts 2>/dev/null
           
-    
+          # Deploy with -T flag to avoid PTY allocation warning
+          ssh -T -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $USER@$HOST << 'ENDSSH'
+            set -e
+            
+            echo "➡️ Moving to project directory"
+            cd /var/www/Updated_Advitum-Healthcare
+            
+            echo "➡️ Pulling latest code"
+            git reset --hard
+            git pull origin main
+            
+            echo "➡️ Activating virtual environment"
+            source venv/bin/activate
+            
+            echo "➡️ Installing dependencies"
+            pip install -r requirements.txt
+            
+            echo "➡️ Running migrations"
+            python manage.py migrate --noinput
+            
+            echo "➡️ Collecting static files"
+            python manage.py collectstatic --noinput
+            
+            echo "➡️ Restarting services"
+            sudo systemctl restart gunicorn
+            sudo systemctl reload nginx
+            
+            echo "✅ Deployment complete"
+          ENDSSH
