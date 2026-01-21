@@ -13,40 +13,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy to Hostinger VPS
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
-          set -e
-
-          echo "➡️ Moving to project directory"
-          cd /var/www/Updated_Advitum-Healthcare
-
-          echo "➡️ Pulling latest code from main branch"
-          git reset --hard
-          git pull origin main
-
-          echo "➡️ Activating virtual environment"
-          source venv/bin/activate
-
-          echo "➡️ Installing/updating dependencies"
-          pip install -r requirements.txt
-
-          echo "➡️ Running Django migrations"
-          python manage.py migrate --noinput
-
-          echo "➡️ Collecting static files"
-          python manage.py collectstatic --noinput
-
-          echo "➡️ Restarting Gunicorn and reloading Nginx"
-          sudo systemctl restart gunicorn
-          sudo systemctl reload nginx
-
-          echo "✅ Deployment finished successfully"
-          ENDSSH
+      - name: Deploy to Hostinger
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/Updated_Advitum-Healthcare
+            git reset --hard
+            git pull origin main
+            source venv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate --noinput
+            python manage.py collectstatic --noinput
+            sudo systemctl restart gunicorn
+            sudo systemctl reload nginx
+            echo "✅ Deployment complete"
