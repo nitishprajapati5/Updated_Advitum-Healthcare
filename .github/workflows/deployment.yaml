@@ -19,11 +19,28 @@ jobs:
           echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           chmod 700 ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
+          
+          # Add verbose host key scanning
+          echo "Adding host to known_hosts..."
+          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts 2>&1
+          
+          # Verify key format
+          echo "Verifying SSH key format..."
+          ssh-keygen -l -f ~/.ssh/id_ed25519 || echo "Key verification failed"
+
+      - name: Test SSH Connection
+        run: |
+          echo "Testing SSH connection with verbose output..."
+          ssh -vvv -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o ConnectTimeout=10 \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP_ADDRESS }} "echo 'Connection successful'" || {
+            echo "❌ SSH connection failed"
+            exit 1
+          }
 
       - name: Deploy to Hostinger VPS
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
             set -e
             
             echo "➡️ Moving to project directory"
