@@ -39,6 +39,9 @@ jobs:
             
             echo "Installing dependencies"
             pip install -r requirements.txt
+
+            echo "Clearing old static files"
+            rm -rf staticfiles/*
             
             echo "Running migrations"
             python manage.py migrate --noinput
