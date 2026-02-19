@@ -225,6 +225,24 @@
         }
         .hero-content { position: relative; z-index: 2; flex: 1; }
         .hero-content h1 { font-size: 3rem; line-height: 1.1; color: var(--text-dark); margin-bottom: 20px;font-weight: 700; }
+
+        .hero-text-slides { position: relative; }
+        .hero-text-slide {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+        .hero-text-slide.active-text {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            pointer-events: auto;
+        }
         
         .image-carousel {
             flex: 1; position: relative; height: 300px; border-radius: 30px; 
@@ -297,11 +315,15 @@
         .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
 
         /* --- RESPONSIVE FIXES --- */
+        .stats-grid-responsive { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+
         @media (max-width: 992px) {
             .hero-banner { flex-direction: column; text-align: center; padding-top: 140px; }
             .hero-content h1 { font-size: 2.8rem; }
             .image-carousel { width: 100%; height: 350px; }
             .about-detailed { grid-template-columns: 1fr; }
+            #about-us-section > div:first-child { grid-template-columns: 1fr !important; text-align: center; }
+            #about-us-section > div:first-child .about-image { margin: 0 auto; }
         }
 
         @media (max-width: 768px) {
@@ -556,6 +578,138 @@
         background: var(--primary-color); 
     }
 }
+
+
+
+
+
+/* Everything between your Header and Footer must be wrapped in a <main> 
+   or <div> with this class */
+.content-wrapper {
+    flex: 1 0 auto; /* This 'grows' to fill empty space, pushing footer down */
+}
+
+.site-footer {
+    flex-shrink: 0; /* Prevents the footer from squishing */
+}
+
+/* --- PREMIUM FOOTER STYLING --- */
+.site-footer {
+    background: #0a2523; /* Deep Medical Teal-Black */
+    color: #e8f6f5;
+    border-top: 5px solid #00A79D;
+    padding-top: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 60px 5% 40px;
+    display: grid;
+    /* This makes it responsive: 4 columns on desktop, 1 on mobile */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 40px;
+}
+
+/* Logo Styling */
+.footer-logo {
+    height: 70px;
+    width: auto;
+    filter: brightness(0) invert(1); /* Makes the logo pure white */
+    margin-bottom: 20px;
+}
+
+.footer-col p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #bcd6d4;
+}
+
+/* Headings */
+.footer-col h4 {
+    font-size: 0.9rem;
+    color: #00A79D;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* Navigation Links */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    color: #bcd6d4;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #ffffff;
+    padding-left: 8px; /* Smooth slide effect on hover */
+}
+
+/* Contact List */
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #bcd6d4;
+    margin-bottom: 15px;
+}
+
+.contact-list i {
+    color: #00A79D;
+    margin-top: 4px;
+}
+
+/* Glassmorphism Social Icons */
+.footer-social { display: flex; gap: 12px; margin-top: 25px; }
+.footer-social a {
+    width: 40px; height: 40px; 
+    background: rgba(255, 255, 255, 0.05);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; color: #fff; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.footer-social a:hover {
+    background: #00A79D;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 167, 157, 0.3);
+}
+
+/* Bottom Copyright Bar */
+.footer-bottom {
+    background: rgba(0,0,0,0.2);
+    text-align: center;
+    padding: 25px;
+    margin: -35px;
+    font-size: 0.85rem;
+    color: #8da9a7;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- RESPONSIVE FIX --- */
+@media (max-width: 600px) {
+    .footer-container {
+        text-align: center;
+    }
+    .footer-social, .contact-list li {
+        justify-content: center;
+    }
+}
     </style>
 </head>
 
@@ -598,10 +752,27 @@
 <div class="hero-banner">
     <div class="hero-background"></div>
     <div class="hero-content">
-        <h1>Excellence in Surgical & Medical Disposable Exports</h1>
-        <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-light); margin-bottom: 35px; max-width: 600px;">
-      We deliver meticulously crafted surgical and medical disposable products, developed to meet the most demanding international quality and regulatory standards.
-    </p>  <a href="{% url 'products' %}" class="explore-btn">EXPLORE PRODUCTS</a>
+        <div class="hero-text-slides">
+            <div class="hero-text-slide active-text">
+                <h1>Excellence in Surgical &amp; Medical Disposable Exports</h1>
+                <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-light); margin-bottom: 35px; max-width: 600px;">
+                    We deliver meticulously crafted surgical and medical disposable products, developed to meet the most demanding international quality and regulatory standards.
+                </p>
+            </div>
+            <div class="hero-text-slide">
+                <h1>Where Precision Manufacturing Meets Global Compliance</h1>
+                <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-light); margin-bottom: 35px; max-width: 600px;">
+                    Every product is produced through controlled processes, strict quality assurance systems, and export-ready documentation tailored for international healthcare markets.
+                </p>
+            </div>
+            <div class="hero-text-slide">
+                <h1>A Refined &amp; Reliable Partner for Global Healthcare Supply</h1>
+                <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-light); margin-bottom: 35px; max-width: 600px;">
+                    From hospitals and distributors to institutional buyers, we support long-term partnerships through consistent quality, dependable timelines, and transparent communication.
+                </p>
+            </div>
+        </div>
+        <a href="{% url 'products' %}" class="explore-btn">EXPLORE PRODUCTS</a>
     </div>
 
     <div class="image-carousel">
@@ -613,22 +784,25 @@
     </div>
 </div>
 
-<section id="about-us-section" class="main-container py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?fit=crop&w=800" alt="About" class="rounded-[40px] shadow-[20px_20px_0px_var(--accent-color)]">
-    </div>
-    <div class="about-text">
-        <h2 class="text-4xl font-bold mb-6">AdVitum Healthcare: <br><span class="font-light text-slate-500">Your Strategic Partner</span></h2>
-        <p class="mb-4">Founded in Ahmedabad, <strong>AdVitum Healthcare</strong> specializes in bridging the gap between global manufacturers and local healthcare providers.</p>
-        <ul class="space-y-3">
-            <li><i class="fas fa-certificate text-teal-500 mr-3"></i> Authentic Global Brands</li>
-            <li><i class="fas fa-truck-loading text-teal-500 mr-3"></i> Bulk Supply Capabilities</li>
-            <li><i class="fas fa-tools text-teal-500 mr-3"></i> Post-Sales Technical Support</li>
-        </ul>
+<section id="about-us-section" style="padding: 50px 5%; background: #f7fafa;">
+    <div style="display: flex; gap: 50px; align-items: flex-start; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            <h2 style="font-size: 1.6rem; font-weight: 800; color: #2c3e50; margin-bottom: 10px;">Why Choose Us</h2>
+            <p style="font-size: 0.85rem; color: #7f8c8d; line-height: 1.7;">AdVitum Healthcare delivers certified, sterile, and globally compliant surgical and medical disposable solutions trusted across international markets. Backed by ISO 13485 &amp; CE certifications, advanced quality systems, and strong export expertise, we provide reliable supply, custom branding flexibility, and responsive support—ensuring long-term value for our global partners.</p>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #2c3e50; margin-bottom: 12px;">Why Global Buyers Choose AdVitum Healthcare</h3>
+            <p style="font-size: 0.8rem; color: #555; line-height: 1.85;"><span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>100% Sterile &amp; Safe Products</strong> — Manufactured and supplied under strict quality and safety protocols.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>ISO 13485 &amp; CE Certified Portfolio</strong> — Internationally accepted standards for seamless market entry.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Advanced Manufacturing &amp; Quality Testing</strong> — Precision-controlled production with multi-level inspection processes.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Private Label &amp; Custom Packaging Solutions</strong> — Tailored branding to meet regional and distributor requirements.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Proven Global Export Expertise</strong> — Efficient logistics and regulatory understanding across Africa, the Middle East, and Europe.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Dedicated &amp; Responsive Customer Support</strong> — Professional communication focused on long-term partnerships.</p>
+        </div>
     </div>
 </section>
 
-<section class="benefits-section">
+<!-- <section class="benefits-section">
     <div class="main-container">
         <h3 class="text-4xl font-extrabold mb-10">Premium Wholesale Benefits</h3>
         <div class="benefits-grid">
@@ -648,65 +822,111 @@
                 <p>Every shipment is ISO-certified and undergoes strict inspection.</p>
             </div>
         </div>
-    </div>
+    </div> -->
 
-<section class="py-24 bg-[#f8fafb]">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            
-            <div class="lg:col-span-7">
-                <span class="inline-block py-1 px-4 rounded-full bg-blue-100 text-blue-700 text-sm font-bold uppercase tracking-wider mb-6">
-                    Our Impact
-                </span>
-                <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
-                    Driving the Future of <br>
-                    <span class="text-[#00A79D]">Global Healthcare</span>
-
-                </h2>
-                <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
-                    AdVitum combines years of logistical expertise with a relentless focus on quality. We don't just ship products; we deliver reliability to clinics and hospitals that save lives every single day.
-                </p>
-                
-            </div>
-
-            <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-                
-                <div class="stat-card">
-                    <div class="stat-inner">
-                        <div class="stat-icon bg-blue-50 text-blue-600 pulse-animation">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="flex items-baseline gap-1">
-                                <span class="stat-number-css count-years"></span>
-                                <span class="text-3xl font-bold text-blue-600">+</span>
-                            </div>
-                            <p class="text-gray-500 font-bold uppercase text-xs tracking-widest">Years Experience</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-inner">
-                        <div class="stat-icon bg-orange-50 text-orange-500 pulse-animation">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="flex items-baseline gap-1">
-                                <span class="stat-number-css count-partners"></span>
-                                <span class="text-3xl font-bold text-orange-500">+</span>
-                            </div>
-                            <p class="text-gray-500 font-bold uppercase text-xs tracking-widest">Global Partners</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+<section style="padding: 80px 5%; background: #f8fafb;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; gap: 60px; align-items: flex-start; flex-wrap: wrap;">
+        
+        <div style="flex: 1; min-width: 320px;">
+            <span style="display: inline-block; padding: 5px 16px; border-radius: 50px; background: rgba(0,167,157,0.1); color: #00A79D; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px;">Our Impact</span>
+            <h2 style="font-size: 2.8rem; font-weight: 900; color: #1a202c; line-height: 1.15; margin-bottom: 18px;">Driving the Future of<br><span style="color: #00A79D;">Global Healthcare</span></h2>
+            <p style="font-size: 1rem; color: #6b7280; line-height: 1.75;">AdVitum combines years of logistical expertise with a relentless focus on quality. We don't just ship products; we deliver reliability to clinics and hospitals that save lives every single day.</p>
         </div>
+
+        <div style="flex: 1; min-width: 320px;">
+            <p style="font-size: 0.88rem; color: #555; line-height: 2;"><span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Global Reach</strong> — Supporting healthcare providers across multiple international markets.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Swift &amp; Reliable Logistics</strong> — Efficient global logistics network ensuring timely, secure deliveries across international markets.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Quality Assured</strong> — Every product is supplied under strict quality control, meeting ISO-aligned and CE-compliant standards.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Newest Technology</strong> — Advanced manufacturing and testing technologies for consistent performance and reliability.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>High Customer Satisfaction</strong> — Trusted by global partners for professional service, prompt communication, and dependable supply.<br>
+            <span style="color: #00A79D; font-weight: 700;">&#9654;</span> <strong>Wide Range of Products</strong> — Comprehensive portfolio of surgical and medical disposables tailored for diverse healthcare needs.</p>
+        </div>
+
     </div>
 </section>
    
 
+</section>
+
+<!-- STATS CARDS SECTION -->
+<section style="padding: 60px 5%; background: #ffffff;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;">
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 2rem; font-weight: 900; color: #00A79D; white-space: nowrap;">15+</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Years</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">Industry &amp; Export Experience (via backbone company)</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 2rem; font-weight: 900; color: #00A79D; white-space: nowrap;">20+</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Product Segments</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">Surgical &amp; Medical Disposable Solutions</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 2rem; font-weight: 900; color: #00A79D; white-space: nowrap;">10+</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Countries</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">Global Markets Served</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 1.7rem; font-weight: 900; color: #00A79D; white-space: nowrap;">1,000+</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Partnerships</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">Distributors, Importers &amp; Healthcare Buyers</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 1.4rem; font-weight: 900; color: #00A79D; white-space: nowrap;">ISO &amp; CE</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Certified</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">International Quality &amp; Safety Standards</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px; padding: 22px 20px; background: #f7fafa; border-radius: 12px; ">
+            <p style="font-size: 1.1rem; font-weight: 900; color: #00A79D; white-space: nowrap;">Private Label</p>
+            <div>
+                <p style="font-size: 0.82rem; font-weight: 700; color: #2c3e50;">Ready</p>
+                <p style="font-size: 0.72rem; color: #7f8c8d; line-height: 1.4;">Custom Branding &amp; Packaging Solutions</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS SECTION -->
+<section style="padding: 60px 5%; background: #f7fafa;">
+    <div style="max-width: 1000px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 1.6rem; font-weight: 800; color: #2c3e50; margin-bottom: 35px;">Surgical products are highly regulated. Some trusted standards:</h2>
+        <div style="display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;">
+            <div style="width: 200px; height: 200px; background: white; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="width: 100px; height: 100px; background: #eef4f4; border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center;">
+                    <img src="" alt="ISO 13485" style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                </div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #2c3e50;">ISO 13485</p>
+            </div>
+            <div style="width: 200px; height: 200px; background: white; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="width: 100px; height: 100px; background: #eef4f4; border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center;">
+                    <img src="" alt="CE / EU MDR" style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                </div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #2c3e50;">CE / EU MDR</p>
+            </div>
+            <div style="width: 200px; height: 200px; background: white; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="width: 100px; height: 100px; background: #eef4f4; border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center;">
+                    <img src="" alt="FDA Approvals" style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                </div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #2c3e50;">FDA Approvals</p>
+            </div>
+            <div style="width: 200px; height: 200px; background: white; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div style="width: 100px; height: 100px; background: #eef4f4; border-radius: 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center;">
+                    <img src="" alt="WHO-GMP" style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                </div>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #2c3e50;">WHO-GMP</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 <div class="py-20 bg-[#f8fafb] overflow-hidden">
@@ -768,24 +988,55 @@
     </div>
 </div>
 
-<footer>
-    <div class="main-container footer-content">
-        <div class="max-w-sm">
-            <div class="footer-logo">AdVitum Company.LTD</div>
-            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
-         
+
+<footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo-container">
+                    <img src="{% static 'new_logo.png' %}" alt="AdVitum Logo" class="footer-logo">
+                </div>
+                <p>Trusted global supplier of certified surgical and medical disposable products, delivering quality and reliability to international healthcare markets.</p>
+                <div class="footer-social">
+                      <a href="https://www.linkedin.com/company/advitum-healthcare/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://wa.me/9898265440" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://www.facebook.com/share/1QCwCrvfFL" target="_blank"><i class="fab fa-facebook-f"></i></a>
+
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Product Categories</h4>
+                <ul>
+                    <li><a href="{% url 'products' %}">Surgical Gloves</a></li>
+                    <li><a href="{% url 'products' %}">Face Masks</a></li>
+                    <li><a href="{% url 'products' %}">IV Cannula</a></li>
+                    <li><a href="{% url 'products' %}">Disposable Gowns</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'products' %}">Products</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="contact-list">
+                    <li><i class="fas fa-envelope"></i> info@advitumhealthcare.com</li>
+                    <li><i class="fas fa-phone"></i> +91 9898265440</li>
+                    <li><i class="fas fa-location-dot"></i> Gujarat, India</li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-links">
-            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
-            <ul class="space-y-2">
-                <li><a href="{%url 'about'%}">About Us</a></li>
-                <li><a href="{%url 'contact'%}">Contact</a></li>
-                <p>Help +91 9898265440</p>
-            </ul>
-        </div>
-    </div>
-   
-</footer>
+
+        
+        
+    </footer>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -805,13 +1056,16 @@
             else navbar.classList.remove('scrolled');
         });
 
-        // 3. CAROUSEL AUTO-LOOP
+        // 3. CAROUSEL AUTO-LOOP (synced with text)
         const images = document.querySelectorAll(".carousel-images img");
+        const heroTextSlides = document.querySelectorAll(".hero-text-slide");
         let currentIndex = 0;
         function nextSlide() {
             images[currentIndex].classList.remove("active-image");
+            heroTextSlides[currentIndex].classList.remove("active-text");
             currentIndex = (currentIndex + 1) % images.length;
             images[currentIndex].classList.add("active-image");
+            heroTextSlides[currentIndex].classList.add("active-text");
         }
         setInterval(nextSlide, 3000);
 

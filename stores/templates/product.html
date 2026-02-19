@@ -39,7 +39,7 @@
 
         nav.scrolled { background: var(--primary-color); height: 70px; border-radius: 0; }
            .logo-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .main-logo-image { height: 80px; width: auto; transition: 0.4s; margin-left: -25px; }
+        .main-logo-image { height: 80px; width: auto; transition: 0.4s;  }
         .logo { font-weight: 800; font-size: 1.3em; color: var(--primary-color); font-style: italic; }
         .healthcare { color: #333; font-size: .65rem; font-weight: 700; margin-top: -5px; }
         nav.scrolled .logo, nav.scrolled .healthcare { color: rgb(58, 58, 58); }
@@ -202,18 +202,149 @@
         margin-bottom: 15px; 
     }
 }
+/* --- CRITICAL: FIX FOOTER TO BOTTOM LOGIC --- */
+html, body {
+    height: 100%; /* Important: Tells the browser to use full height */
+    margin: 0;
+}
 
-        /* --- FOOTER CONTENT --- */
-        .footer-lite { background: #1e293b; color: #94a3b8; padding: 40px 20px; text-align: center; }
-        .footer-lite h4 { color: white; margin-bottom: 10px; font-weight: 700; }
+body {
+    display: flex;
+    flex-direction: column; /* Stacks everything vertically */
+    min-height: 100vh;
+}
+
+/* Everything between your Header and Footer must be wrapped in a <main> 
+   or <div> with this class */
+.content-wrapper {
+    flex: 1 0 auto; /* This 'grows' to fill empty space, pushing footer down */
+}
+
+.site-footer {
+    flex-shrink: 0; /* Prevents the footer from squishing */
+}
+
+/* --- PREMIUM FOOTER STYLING --- */
+.site-footer {
+    background: #0a2523; /* Deep Medical Teal-Black */
+    color: #e8f6f5;
+    border-top: 5px solid #00A79D;
+    padding-top: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 60px 5% 40px;
+    display: grid;
+    /* This makes it responsive: 4 columns on desktop, 1 on mobile */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 40px;
+}
+
+/* Logo Styling */
+.footer-logo {
+    height: 70px;
+    width: auto;
+    filter: brightness(0) invert(1); /* Makes the logo pure white */
+    margin-bottom: 20px;
+}
+
+.footer-col p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #bcd6d4;
+}
+
+/* Headings */
+.footer-col h4 {
+    font-size: 0.9rem;
+    color: #00A79D;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* Navigation Links */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    color: #bcd6d4;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #ffffff;
+    padding-left: 8px; /* Smooth slide effect on hover */
+}
+
+/* Contact List */
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #bcd6d4;
+    margin-bottom: 15px;
+}
+
+.contact-list i {
+    color: #00A79D;
+    margin-top: 4px;
+}
+
+/* Glassmorphism Social Icons */
+.footer-social { display: flex; gap: 12px; margin-top: 25px; }
+.footer-social a {
+    width: 40px; height: 40px; 
+    background: rgba(255, 255, 255, 0.05);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; color: #fff; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.footer-social a:hover {
+    background: #00A79D;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 167, 157, 0.3);
+}
+
+/* Bottom Copyright Bar */
+.footer-bottom {
+    background: rgba(0,0,0,0.2);
+    text-align: center;
+    padding: 25px;
+    font-size: 0.85rem;
+    color: #8da9a7;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- RESPONSIVE FIX --- */
+@media (max-width: 600px) {
+    .footer-container {
+        text-align: center;
+    }
+    .footer-social, .contact-list li {
+        justify-content: center;
+    }
+}
+
+
+
 
         
-        /* --- FOOTER --- */
-        footer { background: #272e3d; color: #ecf0f1; padding: 80px 5% 40px;border-top-left-radius: 30px;border-top-right-radius: 30px; }
-        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 50px; }
-        .footer-logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); font-style: italic; margin-bottom: 20px; }
-        .footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.85rem; }
-
     </style>
 </head>
 <body>
@@ -311,24 +442,53 @@
         </div>
     </div>
 </section>
-<footer>
-    <div class="main-container footer-content">
-        <div class="max-w-sm">
-            <div class="footer-logo">AdVitum Company.LTD</div>
-            <p>Empowering healthcare with quality supplies. Your trusted partner in medical distribution and logistics.</p>
-         
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo-container">
+                    <img src="{% static 'new_logo.png' %}" alt="AdVitum Logo" class="footer-logo">
+                </div>
+                <p>Trusted global supplier of certified surgical and medical disposable products, delivering quality and reliability to international healthcare markets.</p>
+                <div class="footer-social">
+                      <a href="https://www.linkedin.com/company/advitum-healthcare/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+<a href="https://wa.me/9898265440" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://www.facebook.com/share/1QCwCrvfFL" target="_blank"><i class="fab fa-facebook-f"></i></a>
+
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Product Categories</h4>
+                <ul>
+                    <li><a href="{% url 'products' %}">Surgical Gloves</a></li>
+                    <li><a href="{% url 'products' %}">Face Masks</a></li>
+                    <li><a href="{% url 'products' %}">IV Cannula</a></li>
+                    <li><a href="{% url 'products' %}">Disposable Gowns</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'products' %}">Products</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="contact-list">
+                    <li><i class="fas fa-envelope"></i> info@advitumhealthcare.com</li>
+                    <li><i class="fas fa-phone"></i> +91 9898265440</li>
+                    <li><i class="fas fa-location-dot"></i> Gujarat, India</li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-links">
-            <h4 class="text-teal-500 font-bold mb-4">Company</h4>
-            <ul class="space-y-2">
-                <li><a href="{%url 'about'%}">About Us</a></li>
-                <li><a href="{%url 'contact'%}">Contact</a></li>
-                <p>Help +91 9898265440</p>
-            </ul>
-        </div>
-    </div>
-   
-</footer>
+
+    </footer>
 
 
 <script>
