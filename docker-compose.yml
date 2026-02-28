@@ -1,26 +1,26 @@
-
 services:
   web:
     platform: linux/amd64
     image: mahediali072/django-app:latest
     container_name: django-app
     restart: always
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - sqlite_data:/app/data
+      - static_volume:/app/static  # Shared static folder
 
   nginx:
     build: ./nginx
-    image: nginx:alpine
     container_name: nginx
     restart: always
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/static:ro # Nginx reads from here
     depends_on:
       - web
 
 volumes:
   sqlite_data:
+  static_volume: # Define the shared volume
