@@ -1,6 +1,7 @@
 
 services:
   web:
+    platform: linux/amd64
     image: mahediali072/django-app:latest
     container_name: django-app
     restart: always
