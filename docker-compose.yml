@@ -4,12 +4,12 @@ services:
     image: mahediali072/django-app:latest
     container_name: django-app
     restart: always
-    expose:
-      - "80:8000"
+    ports:
+      - "80:8000"  # expose directly
     volumes:
       - sqlite_data:/app/data
-      - static_volume:/app/static  # Shared static folder
+      - static_volume:/app/static
 
 volumes:
   sqlite_data:
-  static_volume: # Define the shared volume
+  static_volume:
