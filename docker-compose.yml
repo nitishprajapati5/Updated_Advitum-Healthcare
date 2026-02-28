@@ -5,21 +5,10 @@ services:
     container_name: django-app
     restart: always
     expose:
-      - "8000"
+      - "80:8000"
     volumes:
       - sqlite_data:/app/data
       - static_volume:/app/static  # Shared static folder
-
-  nginx:
-    build: ./nginx
-    container_name: nginx
-    restart: always
-    ports:
-      - "80:80"
-    volumes:
-      - static_volume:/app/static:ro # Nginx reads from here
-    depends_on:
-      - web
 
 volumes:
   sqlite_data:
