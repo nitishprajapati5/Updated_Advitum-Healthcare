@@ -1,29 +1,21 @@
-FROM python:3.11-slim
+FROM python:3.11
 
-# Prevent Python buffering
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# Install nginx and supervisor
+RUN apt-get update && apt-get install -y nginx supervisor
 
+# Copy and install Python deps
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . /app
 WORKDIR /app
 
-# Create SQLite directory
-RUN mkdir -p /app/data
+# Nginx config
+COPY nginx.conf /etc/nginx/sites-available/default
 
-# Install system deps (only if needed)
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Supervisor config (manages both processes)
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Install requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 80
 
-# Copy project
-COPY . .
-
-# Make entrypoint executable
-RUN chmod +x /app/entrypoint.sh
-
-EXPOSE 8000
-
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["/usr/bin/supervisord"]
