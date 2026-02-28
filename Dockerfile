@@ -6,19 +6,22 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# Create SQLite directory
 RUN mkdir -p /app/data
 
-# system deps
-RUN apt-get update && apt-get install -y gcc libpq-dev
+# Install system deps (only if needed)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# install requirements
+# Install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# copy project
+# Copy project
 COPY . .
 
-# make entrypoint executable
+# Make entrypoint executable
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
