@@ -2,8 +2,10 @@ name: Django CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
+env:
+  IMAGE_NAME: mahediali072/django-app
 
 jobs:
   deploy:
@@ -13,45 +15,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Deploy to Hostinger VPS
+      - name: Build Docker image
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
-            root@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
-            set -e
-            
-            echo "Moving to project directory"
-            cd /var/www/Updated_Advitum-Healthcare
-            
-            echo "Pulling latest code"
-            git reset --hard
-            git pull origin main
-            
-            echo "Activating virtual environment"
-            source venv/bin/activate
-            
-            echo "Installing dependencies"
-            pip install -r requirements.txt
+          docker build -t $IMAGE_NAME:latest .
 
-            echo "Clearing old static files"
-            rm -rf staticfiles/*
-            
-            echo "Running migrations"
-            python manage.py migrate --noinput
-            
-            echo "Collecting static files"
-            python manage.py collectstatic --noinput --clear
-            
-            echo "Restarting services"
-            systemctl restart gunicorn
-            systemctl reload nginx
-            
-            echo "Deployment complete"
-          EOF
+      - name: Push Docker image
+        run: |
+          docker push $IMAGE_NAME:latest
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /root/app
+
+            echo "Pulling latest image..."
+            docker pull $IMAGE_NAME:latest
+
+            echo "Restarting containers..."
+            docker compose down
+            docker compose up -d
+
+            echo "Cleaning unused images..."
+            docker image prune -f
