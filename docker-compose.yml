@@ -1,11 +1,8 @@
+version: "3.9"
 
 services:
   web:
-    image: mahediali072/django-app:latest
-    # If you're building from source instead of a registry, replace 'image' with:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    build: .
     container_name: advitum_web
     restart: always
     environment:
@@ -17,37 +14,10 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/uploads
       - db_volume:/app/data
-    expose:
-      - "8000"
-    networks:
-      - advitum_net
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  nginx:
-    image: nginx:alpine
-    container_name: advitum_nginx
-    restart: always
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - static_volume:/app/staticfiles:ro
-      - media_volume:/app/uploads:ro
-    depends_on:
-      - web
-    networks:
-      - advitum_net
 
 volumes:
   static_volume:
   media_volume:
   db_volume:
-
-networks:
-  advitum_net:
-    driver: bridge
