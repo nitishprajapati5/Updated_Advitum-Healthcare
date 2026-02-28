@@ -6,6 +6,8 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+RUN mkdir -p /app/data
+
 # system deps
 RUN apt-get update && apt-get install -y gcc libpq-dev
 
