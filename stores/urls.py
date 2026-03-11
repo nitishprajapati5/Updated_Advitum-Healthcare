@@ -7,4 +7,4 @@ urlpatterns = [
   path('product', product, name='products'),
   path('about', about, name='about'),
   path('contact', contact, name='contact'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
