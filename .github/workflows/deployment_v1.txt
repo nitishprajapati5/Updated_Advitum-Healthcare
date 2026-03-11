@@ -1,0 +1,55 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh
+          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Hostinger VPS
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            root@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
+            set -e
+            
+            echo "Moving to project directory"
+            cd /var/www/Updated_Advitum-Healthcare
+            
+            echo "Pulling latest code"
+            git reset --hard
+            git pull origin main
+            
+            echo "Activating virtual environment"
+            source venv/bin/activate
+            
+            echo "Installing dependencies"
+            pip install -r requirements.txt
+            
+            echo "Running migrations"
+            python manage.py migrate --noinput
+            
+            echo "Collecting static files"
+            python manage.py collectstatic --noinput
+            
+            echo "Restarting services"
+            systemctl restart gunicorn
+            systemctl reload nginx
+            
+            echo "Deployment complete"
+          EOF
+#Changes

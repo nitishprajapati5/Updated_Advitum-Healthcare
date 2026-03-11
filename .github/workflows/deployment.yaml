@@ -8,47 +8,39 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOSTINGER_IP_ADDRESS }} >> ~/.ssh/known_hosts
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-      - name: Deploy to Hostinger VPS
+      - name: Install dependencies
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
-            root@${{ secrets.HOSTINGER_IP_ADDRESS }} << 'EOF'
-            set -e
-            
-            echo "Moving to project directory"
-            cd /var/www/Updated_Advitum-Healthcare
-            
-            echo "Pulling latest code"
-            git reset --hard
-            git pull origin main
-            
-            echo "Activating virtual environment"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      - name: Collect static files
+        run: python manage.py collectstatic --noinput
+
+      # 6️⃣ Deploy to server via SSH
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          script: |
+            cd /var/www/agro
+            git fetch --all
+            git reset --hard origin/main
             source venv/bin/activate
-            
-            echo "Installing dependencies"
             pip install -r requirements.txt
-            
-            echo "Running migrations"
             python manage.py migrate --noinput
-            
-            echo "Collecting static files"
             python manage.py collectstatic --noinput
-            
-            echo "Restarting services"
-            systemctl restart gunicorn
-            systemctl reload nginx
-            
-            echo "Deployment complete"
-          EOF
+            sudo systemctl restart gunicorn
+            sudo systemctl reload nginx
